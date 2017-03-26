@@ -29,7 +29,8 @@ var AWSPostSignature = function(uploadType) {
       ["starts-with", "$x-amz-meta-tag", ""],
       {"x-amz-credential": credential},
       {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
-      {"x-amz-date": policyDate }
+      {"x-amz-date": policyDate },
+      ["content-length-range", 0, 10485760] //limit size to 10 MB
     ]
   };
 
