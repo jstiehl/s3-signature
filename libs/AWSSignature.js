@@ -1,13 +1,17 @@
 var moment = require('moment-timezone');
 var crypto = require('crypto');
+
+//config
+var config = require('../config');
 //constants
-var REGION_NAME = 'us-west-2';
+var REGION_NAME = config.region;
+var BUCKET = config.s3Bucket;
 var SERVICE_NAME = 's3';
 var TYPE = 'aws4_request';
 var ALGORITHM = 'sha256';
 
-var AWSPostSignature = function(uploadType, bucketId) {
-  var folderPath = "";
+var AWSPostSignature = function(uploadType) {
+  var folderPath = ""; //currently just adding file to top level bucket dir
   var date = moment().utc();
   var policyDate = moment(date).format('YYYYMMDD[T]HHmmss[Z]');
   var expiration = moment(date).add(1, 'hour').toISOString();
@@ -17,7 +21,7 @@ var AWSPostSignature = function(uploadType, bucketId) {
   var policy = {
     "expiration": expiration,
     "conditions": [
-      {"bucket": bucketId},
+      {"bucket": BUCKET},
       ["starts-with", "$key", folderPath],
       {"acl": "bucket-owner-full-control"},
       ["starts-with", "$Content-Type", uploadType],
@@ -41,7 +45,9 @@ var AWSPostSignature = function(uploadType, bucketId) {
     policy: encodedPolicy,
     date: policyDate,
     key_id: process.env.AWS_ACCESS_KEY_ID,
-    path: folderPath
+    path: folderPath,
+    bucket: BUCKET,
+    region: REGION_NAME
   };
   return data;
 };

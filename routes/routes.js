@@ -1,6 +1,4 @@
 var AWSSignature = require('../libs/AWSSignature')
-var config = require('../config');
-var bucket = config.s3Bucket
 
 module.exports = function(router) {
   /**
@@ -8,7 +6,7 @@ module.exports = function(router) {
    */
   router.route('/awssignature').get(function(req, res){
     var type = req.query.type;
-    var data = AWSSignature(type, bucket);
+    var data = AWSSignature(type);
     res.send({status: 200, data: data});
   });
 

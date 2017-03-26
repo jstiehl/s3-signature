@@ -14,5 +14,6 @@ module.exports = {
     port: 5000,
     prefix: '/v1'
   },
-  s3Bucket: process.env.BUCKET
+  s3Bucket: process.env.BUCKET,
+  region: process.env.REGION || 'us-west-2'
 };
